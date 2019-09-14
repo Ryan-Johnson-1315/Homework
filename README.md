@@ -13,6 +13,12 @@ Displays: class name, assignment name, days left till due date, day of the week 
         cd Homework
         chmod +x install/install.sh
         ./install/install.sh
+2. Create an API key and add the key to settings/settings.json
+3. Add canvas url to settings/settings.json. Example url will look something like xxxx.instructure.com, where xxxx is specific to your school canvas.
+4. On canvas select a class and check the browsers url for class number. Add these class numbers (as ints) to settings/settings.json
+5. Run hw.py
+        
+        python3.6 hw.py
 
 # Example bash script to run in terminal
 
