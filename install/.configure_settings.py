@@ -10,9 +10,9 @@ else:
     settings = dict()
     settings['api'] = "Set up api key"
     settings['url'] = "Set up url link"
-    settings['longest_desc'] = "Do not edit - Used for formatting"
-    settings['longest_clas'] = "Do not edit - Used for formatting"
-    settings['classes'] = [0, 2, 3, 4, 5]
+    settings['longest_desc'] = 0
+    settings['longest_clas'] = 0
+    settings['classes'] = [0, 1, 2]
     json.dump(settings, open('settings/settings.json', 'w+'))
 
     print('\t-Open settings/settings.json and configure the following fields:')
