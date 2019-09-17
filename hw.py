@@ -28,7 +28,7 @@ def run():
                 date = get_date(a.due_at)
                 delta = date - now
                 out = ""
-                if delta.days > -1 and delta.days < days:
+                if delta.days > -2 and delta.days < days:
                     prct = float(delta.days) / float(days)
                     if prct < .25:
                         out += URGENT
