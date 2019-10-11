@@ -8,6 +8,7 @@ def run():
     args = parser.parse_args()
     config = get_config(args.settings)
 
+
     # Canvas object and students classes
     canvas = Canvas(config['url'], config['api'])
     
@@ -21,23 +22,6 @@ def run():
     
     for course_number in courses:
         course = canvas.get_course(course_number)
-        
-
-        #announcements = course.get_announcements()
-        #announcements = canvas.get_announcements(context_codes=[str(course_number)])
-        #print(announcements._elements)
-
-        #
-        #for i in announcements:
-        #    import json
-        #    #print(json.dumps(i.attributes))
-        #    date = get_date(i.created_at)
-        #    delta = now - date
-        #    print(f'Days: {delta.days} | {i.html_url}')
-     
-     
-     
-
 
 
         '''This is working from here down'''
@@ -82,7 +66,7 @@ def run():
 
     # Print the annoucements
     print('\n---ANNOUNCEMENTS---\n')
-    config['annoucements'] = args.announcements
+    config['announcements'] = args.announcements
 
     c = 1
     for course_number in courses:
