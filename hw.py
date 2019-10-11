@@ -66,6 +66,9 @@ def run():
     print('\n---ANNOUNCEMENTS---\n')
     config['annoucements'] = args.announcements
 
+    if args.announcements != 5: # 5 is default
+        config["announcements"] = args.announcements
+        
     c = 1
     for course_number in courses:
         course = canvas.get_course(course_number)

@@ -35,12 +35,12 @@ def get_dir(file_location):
 
 def get_parser():
     parser = argparse.ArgumentParser(prog='hw.py')
-    parser.add_argument('-s', '--settings', help="Path to settings file", default="settings/settings.json", type=str, metavar='')
+    parser.add_argument('-s', '--settings', help="Path to settings file", default="settings/my_settings.json", type=str, metavar='')
     parser.add_argument('-d', '--days', help="Show number of assignments due in this amount of days", type=int, default=21, metavar='')
     parser.add_argument('-w', '--weeks', help="Show number of assignments due in this amount of weeks", type=int, default=0, metavar='')
     parser.add_argument('-r', '--reset', help="(true or false). Reset the formatting space. Use this when there is extra whitespace in the outputted formatting, then re-run script",
                     default=False, type=bool, metavar='')
-    parser.add_argument('-a', '--announcements', help='Number of days to go back and look at annoucements')
+    parser.add_argument('-a', '--announcements', help='Number of days to go back and look at annoucements', type=int, default=5, metavar='')
 
     return parser
 
