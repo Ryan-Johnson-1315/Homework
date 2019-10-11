@@ -66,7 +66,7 @@ def run():
 
     # Print the annoucements
     print('\n---ANNOUNCEMENTS---\n')
-    if args.announcements is not None:
+    if args.announcements != 5: # 5 is default
         config["announcements"] = args.announcements
         
     c = 1
