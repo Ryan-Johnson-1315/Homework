@@ -66,8 +66,9 @@ def run():
 
     # Print the annoucements
     print('\n---ANNOUNCEMENTS---\n')
-    config['announcements'] = args.announcements
-
+    if args.announcements is not None:
+        config["announcements"] = args.announcements
+        
     c = 1
     for course_number in courses:
         course = canvas.get_course(course_number)
