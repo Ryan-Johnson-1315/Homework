@@ -10,6 +10,7 @@ def run():
 
     # Canvas object and students classes
     canvas = Canvas(config['url'], config['api'])
+    
     courses = config['classes']
     days = args.days if args.weeks == 0 else args.weeks * 7
 
@@ -70,12 +71,33 @@ def run():
                 # print(e) # this will occur if the due date is None
                 pass
 
+
+    # Print the Homework assignments
     i = 1
     print(f"    {str('Course'): <{config['longest_clas']}} | {str('Description'): <{config['longest_desc']}} | Days Left    | Day       | Link to Assignment")
     for days_left in sorted(todo.keys()): # sort by days    
         for assn in todo[days_left]:
             print(f'{str(i) + ".": <3} {assn}')
             i += 1
+
+    # Print the annoucements
+    print('\n---ANNOUNCEMENTS---\n')
+    config['annoucements'] = args.announcements
+
+    c = 1
+    for course_number in courses:
+        course = canvas.get_course(course_number)
+
+        announcments = course.get_discussion_topics(only_announcements=True)
+        
+        for i in announcments:
+            announce_date = get_date(i.created_at)
+            delta = announce_date - now
+            co = str(course)
+            co = co.split(' ')
+            if delta.days > config['announcements']*-1:
+                print(f'{(str(c) + "."): <{3}} {str(co[1]): <{config["longest_clas"]}} | {(str(i)[0:config["longest_desc"] - 3] + "..."): <{config["longest_desc"]}} | {(delta.days * -1) - 1} days ago   | {i.html_url}')
+                c += 1
 
     if args.reset:
         print()
