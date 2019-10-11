@@ -9,6 +9,7 @@ def run():
 
     # Canvas object and students classes
     canvas = Canvas(config['url'], config['api'])
+    
     courses = config['classes']
 
 
@@ -22,6 +23,20 @@ def run():
 
     for course_number in courses:
         course = canvas.get_course(course_number)
+
+        announcments = course.get_discussion_topics(only_announcements=True)
+        
+        for i in announcments:
+            #print(i)
+            announce_date = get_date(i.created_at)
+            delta = announce_date - now
+            co = str(course)
+            co = co.split(' ')
+            if delta.days > -10:
+                print(f'{co[1]: <{config["longest_clas"]}} | {str(i)[0:20] + "...": <23} | {delta.days * -1} days ago | {i.html_url}')
+        continue
+
+    
         assignments = course.get_assignments()
         for a in assignments:
             try:
