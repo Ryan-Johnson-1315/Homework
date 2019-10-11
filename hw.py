@@ -62,12 +62,12 @@ def run():
             print(f'{str(i) + ".": <3} {assn}')
             i += 1
 
-    # Print the annoucements
-    print('\n---ANNOUNCEMENTS---\n')
-
-    if args.announcements != 5: # 5 is default
+    if args.announcements != config["announcements"] and args.announcements is not None: # 5 is default
         config["announcements"] = args.announcements
-        
+    
+    # Print the annoucements
+    print(f'\n---Announcements for last {config["announcements"]} days---\n')
+
     c = 1
     for course_number in courses:
         course = canvas.get_course(course_number)
