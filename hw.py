@@ -47,7 +47,7 @@ def run():
                         config['longest_clas'] = len(co[1])
 
                     out += f"{co[1]: <{config['longest_clas']}} | {str(a.name): <{config['longest_desc']}} | {delta.days + 1: <{2}} days left | {date.strftime('%A'): <9} | {a.html_url}" + LOW
-                    todo[delta.days].append(out)
+                    todo_hw[delta.days].append(out)
 
             except Exception as e:
                 # print(e) # this will occur if the due date is None
@@ -57,18 +57,22 @@ def run():
     # Print the Homework assignments
     i = 1
     print(f"    {str('Course'): <{config['longest_clas']}} | {str('Description'): <{config['longest_desc']}} | Days Left    | Day       | Link to Assignment")
-    for days_left in sorted(todo.keys()): # sort by days    
-        for assn in todo[days_left]:
+    for days_left in sorted(todo_hw.keys()): # sort by days    
+        for assn in todo_hw[days_left]:
             print(f'{str(i) + ".": <3} {assn}')
             i += 1
 
     if args.announcements != config["announcements"] and args.announcements is not None: # 5 is default
         config["announcements"] = args.announcements
+
+    if args.reset:
+        print()
+        print('Re-run program for newly formatted output')
+
     
     # Print the annoucements
     print(f'\n---Announcements for last {config["announcements"]} days---\n')
 
-    c = 1
     for course_number in courses:
         course = canvas.get_course(course_number)
 
@@ -79,14 +83,15 @@ def run():
             delta = announce_date - now
             co = str(course)
             co = co.split(' ')
-            if delta.days > config['announcements']*-1:
-                print(f'{(str(c) + "."): <{3}} {str(co[1]): <{config["longest_clas"]}} | {(str(i)[0:config["longest_desc"] - 3] + "..."): <{config["longest_desc"]}} | {(delta.days * -1) - 1} days ago   | {i.html_url}')
-                c += 1
-
-    if args.reset:
-        print()
-        print('Re-run program for newly formatted output')
-
+            if delta.days >= config['announcements']*-1:
+                out = f'{str(co[1]): <{config["longest_clas"]}} | {(str(i)[0:config["longest_desc"] - 3] + "..."): <{config["longest_desc"]}} | {(delta.days * -1)} days ago   | {i.html_url}'
+                todo_an[delta.days].append(out)
+                
+    c = 1
+    for days_left in sorted(todo_an.keys())[::-1]:
+        for annoucement in todo_an[days_left]:
+            print(f'{(str(c) + "."): <{3}} {annoucement}')
+            c += 1
     save_settings(config, args.settings)
 
 
