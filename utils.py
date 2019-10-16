@@ -17,8 +17,8 @@ LOCAL = tz.tzlocal()
 today = datetime.datetime.now()
 
 now = datetime.datetime.now()
-todo = defaultdict(list)
-
+todo_hw = defaultdict(list)
+todo_an = defaultdict(list)
 
 def get_date(due_at):
     date_string = str(due_at).replace('T',' ')
