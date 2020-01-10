@@ -42,13 +42,13 @@ def run():
                     co = str(course)
                     co = co.split(' ')
 
-                    if len(a.name) > config['longest_desc']:
+                    if len(a.name) > config['longest_desc'] and len(co[1]) < 15:
                         config['longest_desc'] = len(a.name)                    
 
-                    if len(co[1]) > config['longest_clas']:
+                    if len(co[1]) > config['longest_clas'] and len(co[1]) < 15:
                         config['longest_clas'] = len(co[1])
 
-                    out += f"{co[1]: <{config['longest_clas']}} | {str(a.name): <{config['longest_desc']}} | {delta.days + 1: <{2}} days left | {date.strftime('%A'): <9} | {a.html_url}" + LOW
+                    out += f"{co[2][0:config['longest_desc']]: <{config['longest_clas']}} | {str(a.name)[0:config['longest_desc']]: <{config['longest_desc']}} | {delta.days + 1: <{2}} days left | {date.strftime('%A'): <9} | {a.html_url}" + LOW
                     todo_hw[delta.days].append(out)
 
             except Exception as e:
