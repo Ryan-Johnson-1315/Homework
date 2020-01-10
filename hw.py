@@ -42,10 +42,10 @@ def run():
                     co = str(course)
                     co = co.split(' ')
 
-                    if len(a.name) > config['longest_desc'] and len(co[1]) < 15:
+                    if len(a.name) > config['longest_desc'] and len(a.name) < 10:
                         config['longest_desc'] = len(a.name)                    
 
-                    if len(co[1]) > config['longest_clas'] and len(co[1]) < 15:
+                    if len(co[1]) > config['longest_clas'] and len(co[1]) < 10:
                         config['longest_clas'] = len(co[1])
 
                     out += f"{co[2][0:config['longest_desc']]: <{config['longest_clas']}} | {str(a.name)[0:config['longest_desc']]: <{config['longest_desc']}} | {delta.days + 1: <{2}} days left | {date.strftime('%A'): <9} | {a.html_url}" + LOW
@@ -58,7 +58,7 @@ def run():
 
     # Print the Homework assignments
     i = 1
-    print(f"    {str('Course'): <{config['longest_clas']}} | {str('Description'): <{config['longest_desc']}} | Days Left    | Day       | Link to Assignment")
+    print(f"    {str('Course'): <{config['longest_clas']}}    | {str('Description'): <{config['longest_desc']}}  | Days Left    | Day       | Link to Assignment")
     for days_left in sorted(todo_hw.keys()): # sort by days    
         for assn in todo_hw[days_left]:
             print(f'{str(i) + ".": <3} {assn}')
@@ -85,7 +85,7 @@ def run():
             co = str(course)
             co = co.split(' ')
             if delta.days >= config['announcements']*-1:
-                out = f'{str(co[1]): <{config["longest_clas"]}} | {(str(i)[0:config["longest_desc"] - 3] + "..."): <{config["longest_desc"]}} | {(delta.days * -1)} days ago   | {i.html_url}'
+                out = f'{str(co[2])[0:config["longest_clas"] + 4]: <{config["longest_clas"]}} | {(str(i)[0:config["longest_desc"] - 3] + "..."): <{config["longest_desc"]}} | {(delta.days * -1)} days ago   | {i.html_url}'
                 todo_an[delta.days].append(out)
                 
     c = 1
