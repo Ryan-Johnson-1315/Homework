@@ -1,13 +1,12 @@
 from canvasapi import Canvas
 import canvasapi
-from utils import *
+import utils
 
 def run():
     # Load commandline args and settings
-    parser = get_parser()
+    parser = utils.get_parser()
     args = parser.parse_args()
-    config = get_config(args.settings)
-
+    config = utils.get_config(args.settings)
 
     # Canvas object and students classes
     canvas = Canvas(config['url'], config['api'])
@@ -19,26 +18,27 @@ def run():
         print('Resetting output space')
         config['longest_desc'] = 0
         config['longest_clas'] = 0
-    
+
     for course_number in courses:
         course = canvas.get_course(course_number)
+        # print(str(course)[12:])
 
 
         '''This is working from here down'''
         assignments = course.get_assignments()
         for a in assignments:
             try:
-                date = get_date(a.due_at)
-                delta = date - now
+                assignment_name = str(a).split('(')[0]
+                due_date, day_of_week = utils.get_date(a.due_at)
                 out = ""
-                if delta.days > -2 and delta.days < days:
-                    prct = float(delta.days) / float(days)
+                if due_date > -2 and due_date < days:
+                    prct = float(due_date) / float(days)
                     if prct < .25:
-                        out += URGENT
+                        out += utils.URGENT
                     elif prct < .5:
-                        out += HIGH
+                        out += utils.HIGH
                     elif prct < .75:
-                        out += MEDIUM
+                        out += utils.MEDIUM
                     co = str(course)
                     co = co.split(' ')
 
@@ -48,8 +48,13 @@ def run():
                     if len(co[1]) > config['longest_clas'] and len(co[1]) < 10:
                         config['longest_clas'] = len(co[1])
 
-                    out += f"{co[2][0:config['longest_desc']]: <{config['longest_clas']}} | {str(a.name)[0:config['longest_desc']]: <{config['longest_desc']}} | {delta.days + 1: <{2}} days left | {date.strftime('%A'): <9} | {a.html_url}" + LOW
-                    todo_hw[delta.days].append(out)
+                    out += f"{co[2][0:config['longest_desc']]: <{config['longest_clas']}} | "
+                    out += f"{str(a.name)[0:config['longest_desc']]: <{config['longest_desc']}} | "
+                    out += f"{due_date + 1: <{2}} days left | "
+                    out += f"{day_of_week: <9} | "
+
+                    out += f"{a.html_url}" + utils.LOW
+                    utils.todo_hw[due_date].append(out)
 
             except Exception as e:
                 # print(e) # this will occur if the due date is None
@@ -58,11 +63,8 @@ def run():
 
     # Print the Homework assignments
     i = 1
-    print(f"    {str('Course'): <{config['longest_clas']}}    | {str('Description'): <{config['longest_desc']}}  | Days Left    | Day       | Link to Assignment")
-    for days_left in sorted(todo_hw.keys()): # sort by days    
-        for assn in todo_hw[days_left]:
-            print(f'{str(i) + ".": <3} {assn}')
-            i += 1
+    print(f"    {str('Course'): <{config['longest_clas']}}    | {str('Homework'): <{config['longest_desc']}} |  Days Left   | Day       | Link to Assignment")
+    utils.print_assignmentes()
 
     if args.announcements != config["announcements"] and args.announcements is not None: # 5 is default
         config["announcements"] = args.announcements
@@ -81,12 +83,12 @@ def run():
         
         for i in announcments:
             announce_date = get_date(i.created_at)
-            delta = announce_date - now
+            time_till_due = announce_date - now
             co = str(course)
             co = co.split(' ')
-            if delta.days >= config['announcements']*-1:
-                out = f'{str(co[2])[0:config["longest_clas"] + 4]: <{config["longest_clas"]}} | {(str(i)[0:config["longest_desc"] - 3] + "..."): <{config["longest_desc"]}} | {(delta.days * -1)} days ago   | {i.html_url}'
-                todo_an[delta.days].append(out)
+            if time_till_due.days >= config['announcements']*-1:
+                out = f'{str(co[2])[0:config["longest_clas"] + 4]: <{config["longest_clas"]}} | {(str(i)[0:config["longest_desc"] - 3] + "..."): <{config["longest_desc"]}} | {(time_till_due.days * -1)} days ago   | {i.html_url}'
+                todo_an[time_till_due.days].append(out)
                 
     c = 1
     for days_left in sorted(todo_an.keys())[::-1]:

@@ -14,7 +14,6 @@ LOW    = "\033[;37m" # White
 # Set up the date objects that will be needed
 UTC = tz.gettz('UTC')
 LOCAL = tz.tzlocal()
-today = datetime.datetime.now()
 
 now = datetime.datetime.now()
 todo_hw = defaultdict(list)
@@ -25,7 +24,9 @@ def get_date(due_at):
     date = datetime.datetime.strptime(f'{date_string}', '%Y-%m-%d %H:%M:%SZ')
     date = date.replace(tzinfo=UTC)
     local_due_date = date.astimezone(LOCAL)
-    return datetime.datetime.strptime(f'{local_due_date.year}-{local_due_date.month}-{local_due_date.day}', '%Y-%m-%d')
+    tmp = datetime.datetime.strptime(f'{local_due_date.year}-{local_due_date.month}-{local_due_date.day}', '%Y-%m-%d')
+    due_date = tmp - now
+    return due_date.days, tmp.strftime("%A")
 
 
 def get_dir(file_location):
@@ -51,10 +52,10 @@ def get_config(location):
 def save_settings(settings, location):
     location = get_dir(location)
     json.dump(settings, open(location, 'w')) # sys.path[0] works because of line 10
-    
-def get_date(due_at):
-    date_string = str(due_at).replace('T',' ')
-    date = datetime.datetime.strptime(f'{date_string}', '%Y-%m-%d %H:%M:%SZ')
-    date = date.replace(tzinfo=UTC)
-    local_due_date = date.astimezone(LOCAL)
-    return datetime.datetime.strptime(f'{local_due_date.year}-{local_due_date.month}-{local_due_date.day}', '%Y-%m-%d')
+
+def print_assignmentes():
+    i = 1
+    for days_left in sorted(todo_hw.keys()): # sort by days    
+        for assn in todo_hw[days_left]:
+            print(f'{str(i) + ".": <3} {assn}')
+            i += 1
