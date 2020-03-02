@@ -82,20 +82,43 @@ def run():
         announcments = course.get_discussion_topics(only_announcements=True)
         
         for i in announcments:
-            announce_date = get_date(i.created_at)
-            time_till_due = announce_date - now
+            time_till_due, day_of_week = utils.get_date(i.created_at)
             co = str(course)
             co = co.split(' ')
-            if time_till_due.days >= config['announcements']*-1:
-                out = f'{str(co[2])[0:config["longest_clas"] + 4]: <{config["longest_clas"]}} | {(str(i)[0:config["longest_desc"] - 3] + "..."): <{config["longest_desc"]}} | {(time_till_due.days * -1)} days ago   | {i.html_url}'
-                todo_an[time_till_due.days].append(out)
-                
-    c = 1
-    for days_left in sorted(todo_an.keys())[::-1]:
-        for annoucement in todo_an[days_left]:
-            print(f'{(str(c) + "."): <{3}} {annoucement}')
-            c += 1
-    save_settings(config, args.settings)
+            out = ""
+            # print(f"config['announcements']*-1: {config['announcements']*-1}")
+            # print(f'time_till_due: {time_till_due}')
+            if time_till_due >= config['announcements']*-1:
+                out += f'{str(co[2])[0:config["longest_clas"] + 4]: <{config["longest_clas"]}} |  '
+                out += f'{(str(i)[0:config["longest_desc"] - 3] + "..."): <{config["longest_desc"]}} | '
+                out += f'{(time_till_due * -1)} days ago   | {i.html_url}'
+                utils.todo_an[time_till_due].append(out)
+    
+
+    utils.print_announcements()
+
+    c = 0
+    emails = canvas.get_conversations()
+    print(f'\n--- Emails ---\n')
+    for i in emails:
+        out = f'{str(c)+".":<3} '
+        if i.workflow_state == 'read':
+            out += f"{utils.MEDIUM}"
+        else:
+            out += f"{utils.URGENT}"
+        days, _ = utils.get_date(i.last_message_at)
+        out += f"{str(i.subject if len(i.subject) < 15 else str(i.subject)[0:12]+'...'):<15} | "
+        out += f"{str(i.participants[0]['name']if len(i.participants[0]['name']) < 15 else str(i.participants[0]['name'])[0:12]+'...'):<15} | "
+        out += f"{str((days*-1) - 2):<3} days ago | "
+        out += f"{str(i.context_name).split(' ')[2]:<13} | "
+        out += f"https://usu.instructure.com/conversations#filter=type=inbox"
+        out += utils.LOW
+        print(out)
+        c += 1
+        if c > 10:
+            break
+
+    utils.save_settings(config, args.settings)
 
 
 # 

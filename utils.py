@@ -18,6 +18,7 @@ LOCAL = tz.tzlocal()
 now = datetime.datetime.now()
 todo_hw = defaultdict(list)
 todo_an = defaultdict(list)
+todo_em = defaultdict(list)
 
 def get_date(due_at):
     date_string = str(due_at).replace('T',' ')
@@ -59,3 +60,11 @@ def print_assignmentes():
         for assn in todo_hw[days_left]:
             print(f'{str(i) + ".": <3} {assn}')
             i += 1
+
+def print_announcements():
+    c = 1
+    for days_left in sorted(todo_an.keys())[::-1]:
+        for annoucement in todo_an[days_left]:
+            print(f'{(str(c) + "."): <{3}} {annoucement}')
+            c += 1
+    
