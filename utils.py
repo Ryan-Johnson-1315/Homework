@@ -41,7 +41,7 @@ def get_parser():
     parser.add_argument('-d', '--days', help="Show number of assignments due in this amount of days", type=int, default=21, metavar='')
     parser.add_argument('-w', '--weeks', help="Show number of assignments due in this amount of weeks", type=int, default=0, metavar='')
     parser.add_argument('-r', '--reset', help="Reset the formatting space. Use this when there is extra whitespace in the outputted formatting, then re-run script",
-                    default=False, action='store_true', type=bool, metavar='')
+                    default=False, action='store_true')
     parser.add_argument('-a', '--announcements', help='Number of days to go back and look at annoucements', type=int, metavar='')
 
     return parser
