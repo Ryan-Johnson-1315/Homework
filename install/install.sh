@@ -1,2 +1,2 @@
-python3.6 -m pip install canvasapi
-python3.6 "$(pwd)/install/.configure_settings.py"
+python3 -m pip install --user canvasapi
+python3 "$(pwd)/install/.configure_settings.py"
